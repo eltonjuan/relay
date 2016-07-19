@@ -1,9 +1,47 @@
-<script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io.connect('http://localhost:3000');
-  socket.on('news', function (data) {
-    console.log('hello')
-    
-    //socket.emit('my other event', { my: 'data' });
+<!doctype html>
+<html>
+
+<head>
+  <link rel="stylesheet" src="//web.nike.com/glyphs/1.2/css/glyphs.min.css">
+  <link rel="stylesheet" src="//web.nike.com/ncss/0.14/snkrs/desktop/css/ncss.en-us.min.css">
+  <script src="/socket.io/socket.io.js"></script>
+  <title>Nike App</title>
+  <script>
+  // var socket = io.connect('http://162.243.161.225/');
+  var socket = io.connect('localhost:3000');
+  socket.on('CUSTOMER_LIST', function (data) {
+    render(data);
   });
+
+  socket.on('CUSTOMER_LIST_CHANGED', function(data){
+    render(data);
+  });
+
+  function render(data) {
+    if (data.people.length) {
+
+      document.getElementsByClassName('error')[0].style.display = 'none';
+      const list = document.getElementById('personList');
+      list.innerHTML = '';
+      data.people.forEach((person) => {
+      let el = document.createElement('li');
+      el.innerHTML = person.name;
+      list.appendChild(el);
+    });
+    } else {
+      const list = document.getElementById('personList');
+      list.innerHTML = '';
+      document.getElementsByClassName('error')[0].style.display = 'block';
+    }
+  }
+
 </script>
+</head>
+
+
+<body>
+  <div class="error" style="display:none;">No one is connected</div>
+  <ul id="personList"></ul>
+</body>
+
+</html>
