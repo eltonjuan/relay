@@ -183,27 +183,27 @@ function updateList() {
 
 function mockGetWishlistIDs (userID) {
     if(userID == '14884403984') {
-       var list = ['10989446', '10340024', '10997573', '10838184']; 
+       var list = ['10989446', '10340024']; 
     } else {
-       var list = ['11055703', '11070665', '11055850', '11009627'];
+       var list = ['11055703', '11070665'];
     }
     return list;
 }
 
 function mockGetPurchaseIDs (userID) {
     if(userID == '14884403984') {
-      var recents = ['10720833', '10201707', '11049570', '11008359'];
+      var recents = ['10720833'];
     } else {
-      var recents = ['11056424', '11096058', '10873962', '11056362'];
+      var recents = ['11056424'];
     }
     return recents;
 }
 
 function mockGetRecommendIDs (userID) {
     if(userID == '14884403984') {
-      var recents = ['10720833', '10201707', '11049570', '11008359'];
+      var recents = ['10720833', '10201707'];
     } else {
-      var recents = ['11056424', '11096058', '10873962', '11056362'];
+      var recents = ['11056424', '11096058'];
     }
     return recents;
 }

@@ -26,6 +26,7 @@
       data.people.forEach((person) => {
       let el = document.createElement('li');
       el.innerHTML = person.name;
+      el.innerHTML = person.dob;
       list.appendChild(el);
     });
     } else {
