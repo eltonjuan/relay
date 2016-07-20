@@ -1,6 +1,7 @@
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
+var fetch = require('node-fetch');
 
 // var people = require('./people.js');
 
@@ -12,7 +13,24 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/client', function (req, res) {
+app.get('/user', function (req, res) {
+  fetch('https://api.nike.com/profile/classic/users/' + req.query.id+ '/account', {
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + req.query.access_key
+    }
+  }).then(function(resp) {
+    return resp.json();
+  }).then(function(json) {
+    res.send(makeNewCustomer(json));
+    console.log('hello');
+  });
+});
+
+
+app.get('/view', function (req, res) {
   res.sendFile(__dirname + '/client.html');
 });
 
@@ -38,7 +56,19 @@ io.on('connection', (socket) => {
   });
 });
 
+function makeNewCustomer(json) {
+    //var doc = document.createElement('template');
+    var doc =  "<script src='/socket.io/socket.io.js'></script><script> \
+      var socket = io.connect('localhost:3000');\
+      socket.emit('NEW_CUSTOMER', \
+        {name: "+ json.entity.firstName + ' ' + json.entity.lastName +
+        ",dob: " + json.entity.dateOfBirth +
+        ",avatar:" + json.entity.avatar +"});</script><body></body>";
+    return doc;
+}
+
 function handleNewCustomer(socket, data) {
+  console.log(people);
   data.socketId = socket.id;
   people.people.push(data);
   io.emit('CUSTOMER_LIST_CHANGED', people);
