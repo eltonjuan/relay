@@ -2,11 +2,11 @@ var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
 var fetch = require('node-fetch');
-
+var cors = require('cors');
 // var people = require('./people.js');
 
 var people = {people:[]};
-
+app.use(cors());
 server.listen(3000);
 
 app.get('/', function (req, res) {
@@ -115,11 +115,12 @@ function finished(config) {
 
 var allClients = [];
 io.on('connection', (socket) => {
-  console.log('connecting', socket.id);
+  console.log('new connection', socket.id);
   socket.emit('CUSTOMER_LIST', people);
   socket.on('NEW_CUSTOMER', handleNewCustomer.bind(null, socket));
 
   socket.on('disconnect', () => {
+    console.log('disconnecting', socket.id);
     var toRemove = [];
     people.people.forEach((person, i) => {
       if (person.socketId === socket.id) {
