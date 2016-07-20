@@ -13,36 +13,22 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/user', function(req, res) {
-    fetch('https://api.nike.com/profile/classic/users/' + req.query.id+ '/account', {
+app.get('/user', function (req, res) {
+  fetch('https://api.nike.com/profile/classic/users/' + req.query.id+ '/account', {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + req.query.access_key
     }
-  }).then(function(resp){
-    return resp.json()
-  }).then(function(json){
-    res.send(json);
-  })
-})
-
-// app.get('/user', function (req, res) {
-//   fetch('https://api.nike.com/profile/classic/users/' + req.query.id+ '/account', {
-//     method: 'GET',
-//     headers: {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json',
-//       'Authorization': 'Bearer ' + req.query.access_key
-//     }
-//   }).then(function(resp) {
-//     return resp.json();
-//   }).then(function(json) {
-//     res.send(makeNewCustomer(json));
-    
-//   });
-// });
+  }).then(function(resp) {
+    return resp.json();
+  }).then(function(json) {
+    res.send(makeNewCustomer(json));    
+  }).catch(function(error) {
+    throw error;
+  });
+});
 
 
 app.get('/view', function (req, res) {
@@ -72,18 +58,29 @@ io.on('connection', (socket) => {
 });
 
 function makeNewCustomer(json) {
-    //var doc = document.createElement('template');
-    var doc =  "<script src='/socket.io/socket.io.js'></script><script> \
-      var socket = io.connect('localhost:3000');\
-      socket.emit('NEW_CUSTOMER', \
-        {name: "+ json.entity.firstName + ' ' + json.entity.lastName +
-        ",dob: " + json.entity.dateOfBirth +
-        ",avatar:" + json.entity.avatar +"});</script><body></body>";
+
+    var doc = `
+      <html>
+        <head>
+          <title>Nike App</title>
+          <script src="/socket.io/socket.io.js"></script>
+          <script>
+            var socket = io.connect('localhost:3000');
+            socket.emit('NEW_CUSTOMER', {
+              name: '${json.entity.firstName} ${json.entity.lastName}',
+              dob: '${json.entity.dateOfBirth}',
+              avatar: '${json.entity.avatar.fullUrl}'
+            });
+          </script>
+        </head>
+        <body>
+        </body>
+      </html>
+    `
     return doc;
 }
 
 function handleNewCustomer(socket, data) {
-  console.log(people);
   data.socketId = socket.id;
   people.people.push(data);
   io.emit('CUSTOMER_LIST_CHANGED', people);
