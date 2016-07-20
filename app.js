@@ -115,11 +115,12 @@ function finished(config) {
 
 var allClients = [];
 io.on('connection', (socket) => {
-  console.log('connecting', socket.id);
+  console.log('new connection', socket.id);
   socket.emit('CUSTOMER_LIST', people);
   socket.on('NEW_CUSTOMER', handleNewCustomer.bind(null, socket));
 
   socket.on('disconnect', () => {
+    console.log('disconnecting', socket.id);
     var toRemove = [];
     people.people.forEach((person, i) => {
       if (person.socketId === socket.id) {
