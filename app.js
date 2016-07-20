@@ -6,7 +6,7 @@ var fetch = require('node-fetch');
 // var people = require('./people.js');
 
 var people = {people:[]};
-
+app.use(cors());
 server.listen(3000);
 
 app.get('/', function (req, res) {
