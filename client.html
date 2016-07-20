@@ -2,8 +2,14 @@
 <script>
   // var socket = io.connect('http://162.243.161.225/');
   var socket = io.connect('localhost:3000');
+  fetch('http://localhost:3000/user?access_key=AfLb5Vc7zRJoXseMgBmRk7OPkdff&id=13383400002').then(function(resp){
+    return resp.json()
+  }).then(function(json){
+    console.log(json);
+    // transform the data here (pull out the fields you want);
+    socket.emit('NEW_CUSTOMER', {name: 'Michael Amos', dob: '1/1/1999', avatar: 'someUrl'})
+  });
   
-  socket.emit('NEW_CUSTOMER', {name: 'Michael Amos', dob: '1/1/1999', avatar: 'someUrl'})
 </script>
 <body>
 

@@ -13,21 +13,36 @@ app.get('/', function (req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/user', function (req, res) {
-  fetch('https://api.nike.com/profile/classic/users/' + req.query.id+ '/account', {
+app.get('/user', function(req, res) {
+    fetch('https://api.nike.com/profile/classic/users/' + req.query.id+ '/account', {
     method: 'GET',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + req.query.access_key
     }
-  }).then(function(resp) {
-    return resp.json();
-  }).then(function(json) {
-    res.send(makeNewCustomer(json));
-    console.log('hello');
-  });
-});
+  }).then(function(resp){
+    return resp.json()
+  }).then(function(json){
+    res.send(json);
+  })
+})
+
+// app.get('/user', function (req, res) {
+//   fetch('https://api.nike.com/profile/classic/users/' + req.query.id+ '/account', {
+//     method: 'GET',
+//     headers: {
+//       'Accept': 'application/json',
+//       'Content-Type': 'application/json',
+//       'Authorization': 'Bearer ' + req.query.access_key
+//     }
+//   }).then(function(resp) {
+//     return resp.json();
+//   }).then(function(json) {
+//     res.send(makeNewCustomer(json));
+    
+//   });
+// });
 
 
 app.get('/view', function (req, res) {
